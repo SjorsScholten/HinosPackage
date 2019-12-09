@@ -1,0 +1,22 @@
+{
+  "name" : "com.hinosstudio.utility",
+  "version" : "0.0.1",
+  "displayName" : "Hinos Utility Package",
+  "description" : "A unity package for creating quick prototypes and utilities",
+  "unity" : "2019.2",
+  "unityRelease" : "6f1",
+  "dependencies" : {
+    "com.unity.inputsystem" : "1.0.0",
+    "com.unity.cinemachine" : "2.3.4"
+  },
+  "keywords" : [
+    "Utility",
+    "Hinos"
+  ],
+  "type" : "",
+  "Author" : {
+    "name" : "Sjors Scholten",
+    "email" : "scholtensjors22@outlook.com",
+    "url" : "http://sjorsscholten.wordpress.com/"
+  }
+}
