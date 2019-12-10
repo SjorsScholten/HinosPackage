@@ -1,6 +1,8 @@
 {
-    "name": "unity.hinosstudio.utility.editor",
-    "references": [],
+    "name": "Unity.HinosStudio.Utility.Editor",
+    "references": [
+        "GUID:9123ef09f2c2c0a40aded93e933451ab"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
