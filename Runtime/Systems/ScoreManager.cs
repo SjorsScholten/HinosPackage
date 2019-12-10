@@ -1,5 +1,6 @@
 ﻿using System;
 using HinosPackage.Runtime.Util;
+using HinosPackage.Runtime.Util.Timers;
 using UnityEngine;
 
 namespace HinosPackage.Runtime.Systems {

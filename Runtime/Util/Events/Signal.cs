@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using HinosPackage.Runtime.Util.Events;
 using UnityEngine;
 
 namespace HinosPackage.Runtime.Systems.Events {
@@ -7,7 +9,7 @@ namespace HinosPackage.Runtime.Systems.Events {
         private readonly List<SignalListener> _listeners = new List<SignalListener>();
 
         public void Raise() {
-            for (var i = 0; i < _listeners.Count; i++) _listeners[i].OnEventRaised();
+            foreach (var listener in _listeners) listener.OnEventRaised();
         }
 
         public void Subscribe(SignalListener signalListener) => _listeners.Add(signalListener);

@@ -1,7 +1,8 @@
 ﻿using System;
+using HinosPackage.Runtime.Components;
 using UnityEngine;
 
-namespace HinosPackage.Runtime.Util {
+namespace HinosPackage.Runtime.Util.Timers {
     [Serializable]
     public class Timer {
         
@@ -90,6 +91,18 @@ namespace HinosPackage.Runtime.Util {
         public float TickTime {
             get => tickTime;
             set => tickTime = value;
+        }
+
+        public void SetCallbacks(ITimerCallbacks timer) {
+            OnTimerStart += timer.OnTimerStart;
+            OnTimerEnd += timer.OnTimerEnd;
+            OnTimerTick += timer.OnTimerTick;
+        }
+
+        public void RemoveCallbacks(ITimerCallbacks timer) {
+            OnTimerStart -= timer.OnTimerStart;
+            OnTimerEnd -= timer.OnTimerEnd;
+            OnTimerTick -= timer.OnTimerTick;
         }
     }
 }
