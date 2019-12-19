@@ -1,58 +1,29 @@
 ﻿using System;
 using System.Collections;
+using HinosPackage.Runtime.Util;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace HinosPackage.Runtime.Components {
     public class HealthComponent : MonoBehaviour {
-        [SerializeField] private float initialHealth = 100f;
-    
-        [SerializeField] private bool regenerateHealth = false;
-        [SerializeField] private float healthRegenerationStartTime = 2f;
-        [SerializeField] private float healthRegenerationAmount = 10f;
-        [SerializeField] private float healthRegenerationTick = 1f;
+        [SerializeField] private Resource health  = new Resource(100f, 0f, 100f);
+        [SerializeField] private Resource temporaryHealth = new Resource(0f, 0f, 150f);
 
         public UnityEvent onDamage = new UnityEvent();
         public UnityEvent onDeath = new UnityEvent();
 
-        private float _currentHealth;
-        private IEnumerator _regenerationCouroutine;
-
         //flags
         private bool _isDead = false;
-        private bool _isRegenerating = false;
-
-        private TargetComponent _targetComponent;
-
-        public event Action<float> OnHealthPercentChanged;
-
-        private void Awake() {
-            _targetComponent = GetComponent<TargetComponent>();
-            CurrentHealth = initialHealth;
-        }
-
-        private void OnEnable() {
-            if (_targetComponent) _targetComponent.OnHit.AddListener(TakeDamage);
-        }
-
-        private void OnDisable() {
-            if(_targetComponent) _targetComponent.OnHit.RemoveListener(TakeDamage);
-        }
 
         public void TakeDamage(float damage) {
             if (damage < 0 || _isDead) return;
-
-            StopHealthRegenerating();
         
-            CurrentHealth -= damage;
+            health.Value -= damage;
         
-            if (CurrentHealth <= 0) {
+            if (health.Depleted) {
                 Die();
                 return;
             }
-
-            if (regenerateHealth && !_isDead)
-                StartHealthRegeneration();
             
             onDamage?.Invoke();
         }
@@ -60,8 +31,8 @@ namespace HinosPackage.Runtime.Components {
         public void Heal(float value) {
             if (value < 0) return;
         
-            if (CurrentHealth + value > initialHealth) CurrentHealth = initialHealth;
-            else CurrentHealth += value;
+            //if (CurrentHealth + value > initialHealth) CurrentHealth = initialHealth;
+            //else CurrentHealth += value;
         }
 
         private void Die() {
@@ -71,39 +42,7 @@ namespace HinosPackage.Runtime.Components {
             Destroy(this.gameObject);
         }
 
-        private void StartHealthRegeneration() {
-            if (_isRegenerating) StopHealthRegenerating();
-        
-            _regenerationCouroutine = HealthRegenerating();
-        
-            StartCoroutine(_regenerationCouroutine);
-            _isRegenerating = true;
-        }
 
-        private void StopHealthRegenerating() {
-            if (!_isRegenerating) return;
-        
-            StopCoroutine(_regenerationCouroutine);
-            _isRegenerating = false;
-        }
-
-        private IEnumerator HealthRegenerating() {
-            yield return new WaitForSeconds(healthRegenerationStartTime);
-            while (CurrentHealth < initialHealth) {
-                CurrentHealth += healthRegenerationAmount;
-                yield return new WaitForSeconds(healthRegenerationTick);
-            }
-        }
-
-    
-        public float CurrentHealth {
-            get => _currentHealth;
-            private set {
-                _currentHealth = value;
-                OnHealthPercentChanged?.Invoke(HealthPercent);
-            }
-        }
-
-        public float HealthPercent => CurrentHealth / initialHealth;
+        public float TotalHealth => health.Value + temporaryHealth.Value;
     }
 }
